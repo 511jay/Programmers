@@ -1,0 +1,75 @@
+//타겟 넘버
+import java.util.ArrayList;
+
+class Solution {
+    static ArrayList<int[]> list =  new ArrayList<int[]>();
+    public int solution(int[] numbers, int target) {
+		int nums_len = numbers.length;
+		int[] idx_arr = new int[nums_len];
+		int answer = 0;
+		for(int i=0; i<nums_len; i++) idx_arr[i] = i;
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		for(int i=0; i<nums_len; i++) {
+			selectR(idx_arr, temp, i+1);
+			int[] plus_arr = new int[i+1];
+			int[] minus_arr = new int[nums_len-plus_arr.length];
+			for(int k=0; k<list.size(); k++) {
+				for(int j=0; j<list.get(k).length; j++) {
+					plus_arr[j] = list.get(k)[j];
+				}
+				int sum = 0;
+				int cnt = 0;
+				if(minus_arr.length>0) {
+					for(int l=0; l<idx_arr.length; l++) {
+						int skip = 0;
+						for(int h=0; h<plus_arr.length; h++) {
+							if(plus_arr[h] == idx_arr[l]) {
+								skip = 1;
+								break;
+							}
+						}
+						if(skip == 0) {
+							minus_arr[cnt] = idx_arr[l];
+							cnt++;
+						}
+					}
+					for(int h=0; h<minus_arr.length; h++) sum+=-1*(numbers[minus_arr[h]]);
+				}
+
+				for(int h=0; h<plus_arr.length; h++) sum+=numbers[plus_arr[h]];
+				if(sum == target) answer++;
+			}
+			temp.clear();
+			list.clear();
+		}
+        return answer;
+    }
+	static void selectR(int[] nums, ArrayList<Integer> idx, int r){
+        if(idx.size() == r){
+            int[] sum = new int[r];
+            for(int i=0; i<r; i++) sum[i] = idx.get(i);
+            list.add(sum);
+            return;
+        }
+        for(int i=0; i<nums.length; i++){
+            if(!idx.contains(i)){
+                ArrayList<Integer> new_idx = new ArrayList<Integer>();
+                new_idx.addAll(idx);
+                if(!idx.isEmpty()){
+                    int con = 0;
+                    for(int k=0; k<idx.size(); k++){
+                        if(i<idx.get(k)){
+                            con = 1;
+                            break;
+                        }
+                    }
+                    if(con == 1) continue;
+                    new_idx.add(i);
+                }else{
+                    new_idx.add(i);
+                }
+                selectR(nums, new_idx, r);
+            }
+        }
+    }
+}

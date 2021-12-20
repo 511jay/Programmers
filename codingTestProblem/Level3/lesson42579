@@ -1,0 +1,116 @@
+//베스트앨범
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        String[] grs = genres;
+		int[] plays2 = plays;
+		ArrayList<String> grs_list = new ArrayList<String>();
+		for(int i=0; i<grs.length; i++) {
+			if(!grs_list.contains(grs[i])) {
+				grs_list.add(grs[i]);
+			}
+		}
+		Album[] albums = new Album[grs_list.size()];
+		for(int i=0; i<grs_list.size(); i++) {
+			albums[i] = new Album(grs_list.get(i));
+		}
+		for(int i=0; i<grs.length; i++) {
+			for(int j=0; j<albums.length; j++) {
+				if(grs[i] .equals(albums[j].genre)) {
+					albums[j].add_song(i, plays2[i]);
+					break;
+				}
+			}
+		}
+		int[] plays_chart = new int[albums.length];
+		int[] chart_num = new int[albums.length];
+		for(int i=0; i<albums.length; i++) {
+			plays_chart[i] = albums[i].total_plays();
+		}
+		Arrays.sort(plays_chart);
+		for(int j=plays_chart.length-1; j>=0; j--) {
+			for(int i=0; i<albums.length; i++) {
+				if(plays_chart[j] == albums[i].total_plays()) {
+					chart_num[plays_chart.length-1-j] = i;
+				}
+			}
+		}
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i=0; i<chart_num.length; i++) {
+			int[] temp = albums[chart_num[i]].first_second();
+			list.add(temp[0]);
+			if(temp[1] != -1) {
+				list.add(temp[1]);
+			}
+		}
+		int[] answer = new int[list.size()];
+		for(int i=0; i<list.size(); i++) {
+			answer[i] = list.get(i);
+		}
+        return answer;
+    }
+    static class Album{
+		String genre = "";
+		ArrayList<Integer> songs;
+		HashMap<Integer, Integer> songs_info;
+
+		public Album(String grs) {
+			// TODO Auto-generated constructor stub
+			genre += grs;
+			songs = new ArrayList<Integer>();
+			songs_info = new HashMap<Integer, Integer>();
+		}
+		public void add_song(int song_num, int plays) {
+			songs.add(song_num);
+			songs_info.put(song_num, plays);
+		}
+		public int total_plays() {
+			int size = songs.size();
+			int sum = 0;
+			for(int i=0; i<size; i++) {
+				sum += songs_info.get(songs.get(i));
+			}
+			return sum;
+		}
+		public int[] first_second() {
+			int[] result = new int[2];
+			if(songs.size() == 1) {
+				result[0] = songs.get(0);
+				result[1] = -1;
+				return result;
+			}
+			int max1 = 0;
+			int max1_plays = 0;
+			for(int i=0; i<songs.size(); i++) {
+				if(songs_info.get(songs.get(i))>max1_plays) {
+					max1 = songs.get(i);
+					max1_plays = songs_info.get(max1);
+				}
+			}
+
+			songs_info.remove(max1);
+			songs.remove((Integer)max1);
+			int max2 = 0;
+			int max2_plays = 0;
+			for(int i=0; i<songs.size(); i++) {
+				if(songs_info.get(songs.get(i))>max2_plays) {
+					max2 = songs.get(i);
+					max2_plays = songs_info.get(max2);
+				}
+			}
+
+			songs_info.remove(max2);
+			songs.remove((Integer)max2);
+			result[0] = max1;
+			result[1] = max2;
+			if(max1_plays == max2_plays) {
+				result[0] = Math.min(max1,  max2);
+				result[1] = Math.max(max1,  max2);
+			}
+			return result;
+		}
+	}
+}

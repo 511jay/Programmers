@@ -1,0 +1,69 @@
+//여행경로
+import java.util.ArrayList;
+import java.util.Collections;
+
+class Solution {
+    static int cnt;
+	static ArrayList<String> result;
+    public String[] solution(String[][] tickets) {
+        cnt = tickets.length;
+		result = new ArrayList<String>();
+		boolean[] used = new boolean[cnt];
+		String[] history = {"ICN"};
+		algo("ICN", tickets, history, 0, used);
+		Collections.sort(result);
+		ArrayList<String> final_result = new ArrayList<String>();
+		for(int i=0; i<(result.get(0).length()/3); i++) {
+			String str = result.get(0).substring(i*3, (i*3)+3);
+			final_result.add(str);
+		}
+        String[] answer = new String[final_result.size()];
+        for(int i=0; i<answer.length; i++) {
+        	answer[i] = final_result.get(i);
+        }
+        return answer;
+    }
+    static void algo(String start, String[][] tickets, String[] history, int cnt2, boolean[] used) {
+		ArrayList<Integer> index_cango = new ArrayList<Integer>();
+		for(int i=0; i<tickets.length; i++) {
+			if(tickets[i][0].equals(start) && used[i]==false) {
+				index_cango.add(i);
+			}
+		}
+
+		if(index_cango.isEmpty()) {
+			if(cnt2 == cnt) {
+				String temp = "";
+				for(int i=0; i<history.length; i++) {
+					temp+=history[i];
+					//System.out.print(history[i]+" ");
+				}
+				result.add(temp);
+				//System.out.println("");
+			}
+			return;
+		}
+
+		for(int i=0; i<index_cango.size(); i++) {
+			boolean new_used[] = new boolean[used.length];
+			for(int k=0; k<used.length; k++) new_used[k] = used[k];
+			String new_start = tickets[index_cango.get(i)][1];
+			String[] new_history = new String[history.length+1];
+			new_used[index_cango.get(i)] = true;
+			for(int k=0; k<history.length; k++) {
+				new_history[k] = history[k];
+				//System.out.print(" "+new_history[k]);
+			}
+			new_history[new_history.length-1] = new_start;
+			//System.out.print(" "+new_history[new_history.length-1]+" /");
+			/*
+			for(int k=0; k<new_used.length; k++) {
+				if(new_used[k] == true)
+					System.out.print(k+" ");
+			}
+			System.out.println("");
+			*/
+			algo(new_start, tickets, new_history, cnt2+1, new_used);
+		}
+	}
+}

@@ -1,0 +1,37 @@
+//N-Queen
+class Solution {
+    static int[] queen_list;
+	static int max;
+	static int answer;
+    int solution(int n) {
+        queen_list = new int[n];
+		 max = n;
+         if(n==1) return 1;
+		 for(int c=0; c<n; c++) {
+			 queen_list[0] = c;
+			 search(1);
+			 }
+
+		 return answer;
+    }
+    static void search(int current_r) {
+		 for(int c=0; c<max; c++) {
+			 if(can_stay(current_r, c)) {
+				 queen_list[current_r] = c;
+				 if(current_r+1 == max) {
+					 answer++;
+					 return;
+				 }
+				 search(current_r+1);
+			 }
+		 }
+	 }
+	 static boolean can_stay(int current_r, int current_c) {
+		 for(int last_r=0; last_r<current_r; last_r++) {
+			 int last_c = queen_list[last_r];
+			 if(last_c == current_c || last_c+(current_r-last_r) == current_c || last_c-(current_r-last_r) == current_c)
+				 return false;
+		 }
+		 return true;
+	 }
+}

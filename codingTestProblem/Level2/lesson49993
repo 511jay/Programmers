@@ -1,0 +1,36 @@
+//스킬트리
+import java.util.ArrayList;
+
+class Solution {
+    public int solution(String skill, String[] skill_trees) {
+        String skills = skill;
+		String[] skill_tree = skill_trees;
+        int answer = 0;
+        for(int i=0; i<skill_tree.length; i++) {
+			if(check_skill(skills, skill_tree[i])) {
+				answer++;
+			}
+		}
+        return answer;
+    }
+    static boolean check_skill(String skill, String skill_tree) {
+		boolean result = true;
+		int[] visit = new int[skill.length()];
+		ArrayList<Character> list = new ArrayList<Character>();
+		for(int i=0; i<skill.length(); i++) {
+			list.add(skill.charAt(i));
+		}
+		for(int i=0; i<skill_tree.length(); i++) {
+			if(list.contains(skill_tree.charAt(i))) {
+				int index = list.indexOf(skill_tree.charAt(i));
+				visit[index] = 1;
+				for(int j=index; j>=0; j--) {
+					if(visit[j]==0) {
+						return false;
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

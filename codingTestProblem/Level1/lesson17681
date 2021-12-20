@@ -1,0 +1,35 @@
+//[1차] 비밀지도
+class Solution {
+public  String[] solution(int n, int[] map1, int[] map2) {
+		String[] answer = new String[n];
+		int[][] map3 = new int[n][n];
+		for(int i=0; i<n; i++) {
+			String row = "";
+			String row1 = Integer.toBinaryString(map1[i]);
+			String row2 = Integer.toBinaryString(map2[i]);
+			if(row1.length()<n) {
+				while(row1.length()<n) {
+					row1 = "0"+row1;
+				}
+			}
+			if(row2.length()<n) {
+				while(row2.length()<n) {
+					row2 = "0"+row2;
+				}
+			}
+			for(int j=0; j<n; j++) {
+				if(row1.charAt(j) == '1' || row2.charAt(j) == '1') {
+					map3[i][j] = 1;
+					row+="#";
+				}else {
+					map3[i][j] = 0;
+					row+=" ";
+				}
+			}
+
+			answer[i] = row;
+		}
+
+	    return answer;
+	}
+}

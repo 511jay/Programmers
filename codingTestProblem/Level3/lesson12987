@@ -1,0 +1,29 @@
+//숫자 게임
+import java.util.Arrays;
+
+class Solution {
+    public int solution(int[] A, int[] B) {
+        int answer = 0;
+        int A_max = A.length;
+        int B_max = B.length;
+        int[] sort_A = A.clone();
+        int[] sort_B = B.clone();
+        Arrays.sort(sort_A);
+        Arrays.sort(sort_B);
+
+        int idx_A = 0;
+        int idx_B = 0;
+        while(idx_A<A_max && idx_B<B_max) {
+        	int A_val = sort_A[idx_A];
+        	int B_val = sort_B[idx_B];
+        	if(A_val<B_val) {
+        		idx_A++;
+        		idx_B++;
+        		answer++;
+        	}else {
+        		idx_B++;
+        	}
+        }
+        return answer;
+    }
+}

@@ -1,0 +1,52 @@
+//소수 만들기
+import java.util.ArrayList;
+
+class Solution {
+    static ArrayList<Integer> list =  new ArrayList<Integer>();
+    public int solution(int[] nums) {
+        int answer = 0;
+        ArrayList<Integer> temp_list = new ArrayList<Integer>();
+        select3(nums, temp_list);
+        for(int i=0; i<list.size(); i++){
+            int key = 0;
+            int sqrt1 = (int)Math.ceil(Math.sqrt(list.get(i)));
+            for(int k=2; k<=sqrt1; k++){
+                if(list.get(i)%k == 0){
+                    key = 1;
+                    break;
+                }
+            }
+            if(key == 0) answer++;
+        }
+
+        return answer;
+    }
+    public void select3(int[] nums, ArrayList<Integer> idx){
+        if(idx.size() == 3){
+            int sum = 0;
+            for(int i=0; i<3; i++) sum+=nums[idx.get(i)];
+            list.add(sum);
+            return;
+        }
+        for(int i=0; i<nums.length; i++){
+            if(!idx.contains(i)){
+                ArrayList<Integer> new_idx = new ArrayList<Integer>();
+                new_idx.addAll(idx);
+                if(!idx.isEmpty()){
+                    int con = 0;
+                    for(int k=0; k<idx.size(); k++){
+                        if(i<idx.get(k)){
+                            con = 1;
+                            break;
+                        }
+                    }
+                    if(con == 1) continue;
+                    new_idx.add(i);
+                }else{
+                    new_idx.add(i);
+                }
+                select3(nums, new_idx);
+            }
+        }
+    }
+}

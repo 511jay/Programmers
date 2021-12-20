@@ -1,0 +1,59 @@
+//[1차] 다트 게임
+import java.util.Stack;
+
+class Solution {
+    public int solution(String dart) {
+		Stack<Integer> stack = new Stack<Integer>();
+        String str = "";
+		for(int i=0; i<dart.length(); i++) {
+			if(dart.charAt(i)>47 && dart.charAt(i)<58) {
+				if(dart.charAt(i+1)>47 && dart.charAt(i+1)<58) {
+					str+=dart.charAt(i);
+					continue;
+				}else {
+					str+=dart.charAt(i);
+					stack.push(Integer.parseInt(str));
+					str = "";
+				}
+
+			}else if(dart.charAt(i)==68 || dart.charAt(i)==83 || dart.charAt(i)==84) {
+				int temp = stack.pop();
+				switch (dart.charAt(i)) {
+				case 68:
+					temp = temp*temp;
+					break;
+				case 84:
+					temp = temp*temp*temp;
+					break;
+				default:
+					break;
+				}
+				stack.push(temp);
+
+			}else if(dart.charAt(i)==35 || dart.charAt(i)==42) {
+				if(dart.charAt(i)==42) {
+					Stack<Integer> temp_stack = new Stack<Integer>();
+					int size = stack.size();
+					if(size>2)
+						size = 2;
+					for(int j=0; j<size; j++) {
+						temp_stack.push(stack.pop()*2);
+					}
+					int temp_size = temp_stack.size();
+					for(int j=0; j<temp_size; j++) {
+						stack.push(temp_stack.pop());
+					}
+				}else if(dart.charAt(i)==35) {
+					int temp = stack.pop();
+					stack.push(-temp);
+				}
+			}
+		}
+		int answer = 0;
+		int size = stack.size();
+		for(int k=0; k<size; k++) {
+			answer += stack.pop();
+		}
+		return answer;
+	}
+}

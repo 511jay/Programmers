@@ -1,0 +1,93 @@
+//방문 길이
+import java.util.ArrayList;
+
+class Solution {
+    public int solution(String str) {
+		int x=0;
+		int y=0;
+		Line test = new Line();
+		for(int i=0; i<str.length(); i++) {
+			char cmd = str.charAt(i);
+			int next_x = x;
+			int next_y = y;
+			if(cango(x, y, cmd)) {
+				switch (cmd) {
+					case 'U':
+						next_y++;
+						break;
+					case 'D':
+						next_y--;
+						break;
+					case 'R':
+						next_x++;
+						break;
+					case 'L':
+						next_x--;
+						break;
+				}
+				test.addPosition(x, y, next_x, next_y);
+			}
+			x= next_x;
+			y= next_y;
+		}
+		int answer = test.getLen();
+		return answer;
+	}
+	static boolean cango(int cur_x, int cur_y, char cmd) {
+		boolean result = true;
+		switch (cmd) {
+			case 'U':
+				if(cur_y+1>5) result = false;
+				break;
+			case 'D':
+				if(cur_y-1<-5) result = false;
+				break;
+			case 'R':
+				if(cur_x+1>5) result = false;
+				break;
+			case 'L':
+				if(cur_x-1<-5) result = false;
+				break;
+		}
+		return result;
+	}
+
+	static class Line{
+		ArrayList<String> save_info = new ArrayList<String>();
+		public void addPosition(int x1, int y1, int x2, int y2) {
+			String x1_val = "";
+			String x2_val = "";
+			String y1_val = "";
+			String y2_val = "";
+			if(x1<0) {
+				x1_val+="!"+(x1*-1);
+			}else {
+				x1_val+=x1;
+			}
+			if(x2<0) {
+				x2_val+="!"+(x2*-1);
+			}else {
+				x2_val+=x2;
+			}
+			if(y1<0) {
+				y1_val+="!"+(y1*-1);
+			}else {
+				y1_val+=y1;
+			}
+			if(y2<0) {
+				y2_val+="!"+(y2*-1);
+			}else {
+				y2_val+=y2;
+			}
+			String key1 = x1_val+y1_val+x2_val+y2_val;
+			String key2 = x2_val+y2_val+x1_val+y1_val;
+			if(save_info.contains(key1)==false && save_info.contains(key2)==false) {
+				save_info.add(key1);
+				save_info.add(key2);
+			}
+		}
+		public int getLen() {
+			return save_info.size()/2;
+		}
+	}
+}

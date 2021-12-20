@@ -1,0 +1,58 @@
+//실패율
+import java.util.HashMap;
+
+class Solution {
+    public int[] solution(int N, int[] stages) {
+		double[] result = new double[N];
+		int[] stage_person = new int[N+1];
+		HashMap<Integer, Integer> hash = new HashMap<Integer, Integer>();
+		for(int i=0; i<N+1; i++) {
+			hash.put(i+1, 0);
+		}
+		for(int i=0; i<stages.length; i++) {
+			int temp = hash.get(stages[i]);
+			hash.put(stages[i], temp+1);
+		}
+		for(int i=0; i<N+1; i++) {
+			int temp = hash.get(i+1);
+			for(int k=0; k<=i; k++) {
+				stage_person[k]+=temp;
+			}
+		}
+		for(int i=0; i<N; i++) {
+			double fail = hash.get(i+1);
+			double people = stage_person[i];
+			double zero = 0;
+			if(people == zero) {
+				result[i] = 0;
+				continue;
+			}
+			double temp = fail/people;
+			result[i] = temp;
+		}
+		int[] answer = new int[N];
+		for(int i=0; i<result.length; i++) {
+			answer[i]= i+1;
+		}
+		answer = Sort(result, answer);
+
+		return answer;
+	}
+     static int[] Sort(double[] arr, int[] r) {
+		for(int i=1; i<arr.length; i++) {
+			double temp = arr[i];
+			int temp2 = r[i];
+			for(int j=i-1; j>-1; j--) {
+				if(arr[j]<temp) {
+					arr[j+1] = arr[j];
+					r[j+1] = r[j];
+					arr[j] = temp;
+					r[j] = temp2;
+				}else if(arr[j]<temp) {
+					break;
+				}
+			}
+		}
+		return r;
+	}
+}

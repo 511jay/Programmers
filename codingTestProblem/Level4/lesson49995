@@ -1,0 +1,40 @@
+//쿠키 구입
+class Solution {
+    static int max;
+    public int solution(int[] cookie) {
+		int answer = 0;
+		max = -1;
+		if(cookie.length<2) return answer;
+		for(int i=0; i<cookie.length-1; i++) {
+			algo(i, i+1, cookie);
+        }
+		if(max<0) {
+			answer = 0;
+		}else {
+			answer = max;
+		}
+        return answer;
+    }
+	static void algo(int m1, int m2, int[] arr) {
+		int l = m1;
+		int r = m2;
+		int m1_sum = arr[l];
+		int m2_sum = arr[r];
+		while(l>-1 && r<arr.length) {
+			if(l == 0 && m1_sum<m2_sum)	break;
+			if(r == arr.length-1 && m1_sum>m2_sum) break;
+			if(m1_sum<m2_sum) {
+				l--;
+				m1_sum+=arr[l];
+			}else if(m1_sum>m2_sum) {
+				r++;
+				m2_sum+=arr[r];
+			}else {
+				if(max<m1_sum) max = m1_sum;
+                if(l == 0) break;
+				l--;
+				m1_sum+=arr[l];
+			}
+		}
+	}
+}

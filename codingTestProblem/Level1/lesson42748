@@ -1,0 +1,23 @@
+//K번째수
+import java.util.Arrays;
+
+class Solution {
+    public int[] solution(int[] array, int[][] commands) {
+        int commandSize = commands.length;
+        int[] answer = new int[commandSize];
+
+        for(int i=0; i<commandSize; i++){
+            int cutStart = commands[i][0]-1;
+            int cutEnd = commands[i][1]-1;
+            int[] temp = new int[cutEnd-cutStart+1];
+
+            for(int j=0; j<temp.length; j++){
+                temp[j] = array[cutStart];
+                cutStart++;
+            }
+            Arrays.sort(temp);
+            answer[i] = temp[commands[i][2]-1];
+        }
+        return answer;
+    }
+}

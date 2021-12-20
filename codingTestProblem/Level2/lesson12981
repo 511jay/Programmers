@@ -1,0 +1,34 @@
+//영어 끝말잇기
+import java.util.ArrayList;
+import java.util.HashMap;
+
+class Solution {
+    public int[] solution(int n, String[] words) {
+		HashMap<Integer, Integer> turn_hash = new HashMap<Integer, Integer>();
+		for(int i=1; i<=n; i++) turn_hash.put(i, 0);
+		ArrayList<String> save_word = new ArrayList<String>();
+		int player = 2;
+		turn_hash.put(1, turn_hash.get(1)+1);
+		save_word.add(words[0]);
+        for(int i=1; i<words.length; i++) {
+        	turn_hash.put(player, turn_hash.get(player)+1);
+        	String word = words[i];
+        	char last_chr = words[i-1].charAt(words[i-1].length()-1);
+        	char comp_chr = word.charAt(0);
+        	if(last_chr != comp_chr) break;
+        	if(save_word.contains(word)) break;
+        	if(i == words.length-1) {
+        		int[] end = {0, 0};
+        		return end;
+        	}
+        	save_word.add(word);
+        	if(player == n) {
+        		player = 1;
+        	}else {
+        		player++;
+        	}
+        }
+		int[] answer = {player, turn_hash.get(player)};
+        return answer;
+    }
+}

@@ -1,0 +1,30 @@
+//예상 대진표
+class Solution{
+    public int solution(int n, int a, int b)
+    {
+        int N = n;
+		int A = a;
+		int B = b;
+
+		int N2 = 0;
+        int answer = 0;
+		while(N!=0) {
+			N = N/2;
+			N2++;
+		}
+
+		for(int i=0; i<N2; i++) {
+			System.out.println(A+" "+B);
+			int temp_A = (int) Math.ceil(Double.valueOf(A)/2);
+			int temp_B = (int) Math.ceil(Double.valueOf(B)/2);
+			if(temp_A == temp_B) {
+				answer = i+1;
+				break;
+			}else {
+				A = temp_A;
+				B = temp_B;
+			}
+		}
+        return answer;
+    }
+}

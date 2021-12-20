@@ -1,0 +1,97 @@
+//다단계 칫솔 판매
+class Solution {
+    public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
+		Tree tree = new Tree(enroll.length);
+		tree.setRoot();
+		tree.setNames(enroll);
+		tree.setRef(referral);
+		for(int i=0; i<seller.length; i++) tree.sell(seller[i], amount[i]);
+        int[] answer = tree.returnAns(enroll);
+        return answer;
+    }
+	static class Tree{
+		Seller[] sellers;
+		int size = 0;
+		public Tree(int size) {
+			// TODO Auto-generated constructor stub
+			sellers = new Seller[size+1];
+			this.size = size+1;
+		}
+		public void setRoot() {
+			sellers[0] = new Seller("root");
+		}
+		public void setNames(String[] names) {
+			for(int i=0; i<names.length; i++) sellers[i+1] = new Seller(names[i]);
+		}
+		public void setRef(String[] referral) {
+			for(int i=0; i<referral.length; i++) {
+				String ref = referral[i];
+				if(ref.equals("root")) {
+					sellers[i+1].setRef(sellers[0]);
+					sellers[i+1].lvl=1;
+				}else {
+					for(int k=1; k<=i; k++) {
+						if(sellers[k].name.equals(ref)) {
+							int ref_lvl = sellers[k].lvl;
+							sellers[i+1].lvl += ref_lvl+1;
+							sellers[i+1].setRef(sellers[k]);
+							break;
+						}
+					}
+				}
+			}
+		}
+		public void sell(String name, int amount) {
+			int seller_idx = 0;
+			for(int i=1; i<size; i++) {
+				if(sellers[i].name.endsWith(name)) {
+					seller_idx = i;
+					break;
+				}
+			}
+			int am100 = amount*100;
+			Seller temp_seller = sellers[seller_idx];
+			int m = am100/10;
+			temp_seller.sold += am100-m;
+			for(int i=seller_idx-1; i>=0; i--) {
+				int m1 = m/10;
+				int m9 = m-m1;
+				Seller i_seller = sellers[i];
+				if(i_seller.lvl<temp_seller.lvl && temp_seller.referral.name.equals(i_seller.name)) {
+					if(m1<1 || i==0) {
+						i_seller.sold+=m;
+						break;
+					}else {
+						i_seller.sold+=m9;
+						temp_seller = sellers[i];
+						m = m1;
+					}
+				}else {
+					continue;
+				}
+			}
+		}
+		public int[] returnAns(String[] enroll) {
+			int[] result = new int[enroll.length];
+			for(int i=1; i<size; i++) {
+				result[i-1] = sellers[i].sold;
+			}
+			return result;
+		}
+	}
+	static class Seller{
+		String name;
+		Seller referral;
+		int sold;
+		int lvl;
+		public Seller(String name) {
+			// TODO Auto-generated constructor stub
+			this.name = name;
+			sold = 0;
+			lvl = 0;
+		}
+		public void setRef(Seller seller) {
+			referral = seller;
+		}
+	}
+}

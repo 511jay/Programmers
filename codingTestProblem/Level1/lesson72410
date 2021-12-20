@@ -1,0 +1,98 @@
+//신규 아이디 추천
+class Solution {
+    public String solution(String new_id) {
+        String ID = new_id;
+        ID = lvl1(ID);
+		ID = lvl2(ID);
+		ID = lvl3(ID);
+		ID = lvl4(ID);
+		ID = lvl5(ID);
+		ID = lvl6(ID);
+		ID = lvl7(ID);
+        return ID;
+    }
+    static String lvl1(String str) {
+		String result = "";
+		for(int i=0; i<str.length(); i++) {
+			int temp = str.charAt(i);
+			if(temp>64 && temp<91) {
+				temp = temp+32;
+			}
+			char temp2 = (char) temp;
+			result+=temp2;
+		}
+		return result;
+	}
+	static String lvl2(String str) {
+		String temp = "";
+		for(int i=0; i<str.length(); i++) {
+			if((str.charAt(i)>96 && str.charAt(i)<123) || (str.charAt(i)>47 && str.charAt(i)<58) || str.charAt(i)==45 || str.charAt(i)==95 || str.charAt(i)==46) {
+				temp+=str.charAt(i);
+			}else {
+				continue;
+			}
+		}
+		return temp;
+	}
+	static String lvl3(String str) {
+		String temp = "";
+		int zum = 0;
+		for(int i=0; i<str.length(); i++) {
+			if(str.charAt(i) == '.') {
+				zum++;
+			}else {
+				if(zum>0) {
+					temp+=".";
+					zum=0;
+				}
+				temp+=str.charAt(i);
+			}
+		}
+
+		if(zum>1) {
+			temp+=".";
+		}
+		return temp;
+	}
+	static String lvl4(String str) {
+		String temp = str;
+		if(temp.length()<1) {
+			return temp;
+		}
+		if(temp.charAt(0) == '.') {
+			temp = temp.substring(1);
+		}
+		if(temp.length()<1) {
+			return temp;
+		}
+		if(temp.charAt(temp.length()-1) == '.') {
+			temp = temp.substring(0, temp.length()-1);
+		}
+		return temp;
+	}
+	static String lvl5(String str) {
+		String temp = str;
+		if(temp.length()<1) {
+			temp+="a";
+		}
+		return temp;
+	}
+	static String lvl6(String str) {
+		String result = str;
+		if(str.length()>15) {
+			result = str.substring(0, 15);
+			if(result.charAt(result.length()-1) == '.') {
+				result = result.substring(0, result.length()-1);
+			}
+		}
+		return result;
+	}
+	static String lvl7(String str) {
+		String result = str;
+		char last = result.charAt(result.length()-1);
+		while(result.length()<3) {
+			result += last;
+		}
+		return result;
+	}
+}

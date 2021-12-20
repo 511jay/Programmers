@@ -1,0 +1,23 @@
+//최소직사각형
+class Solution {
+    public int solution(int[][] sizes) {
+		int max_H = 0;
+		int max_W = 0;
+		for(int i=0; i<sizes.length; i++) {
+			int current_H = sizes[i][0];
+			int current_W = sizes[i][1];
+			if(current_W>current_H) {
+				current_H = sizes[i][1];
+				current_W = sizes[i][0];
+			}
+			if(max_H<current_H) {
+				max_H = current_H;
+			}
+			if(max_W<current_W) {
+				max_W = current_W;
+			}
+		}
+		int answer = max_H*max_W;
+        return answer;
+    }
+}

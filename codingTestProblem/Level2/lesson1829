@@ -1,0 +1,71 @@
+//카카오프렌즈 컬러링북
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Solution {
+    static int[][] map;
+    public int[] solution(int m, int n, int[][] picture) {
+		map = new int[m][n];
+		for(int i=0; i<m; i++) map[i] = picture[i].clone();
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i=0; i<m; i++) {
+			for(int k=0; k<n; k++) {
+				if(map[i][k] != 0) {
+					 list.add(bfs(i, k, map[i][k]));
+				}
+			}
+		}
+		int[] arr = new int[list.size()];
+		for(int i=0; i<arr.length; i++) arr[i] = list.get(i);
+		Arrays.sort(arr);
+		int[] answer = {list.size(), arr[arr.length-1]};
+		return answer;
+	}
+	static int bfs(int r, int c, int val) {
+		int result = 0;
+		int[] position = {r, c};
+		int max_r = map.length;
+		int max_c = map[0].length;
+		Queue<int[]> queue = new LinkedList<int[]>();
+		queue.add(position);
+        map[r][c] = 0;
+		while(!queue.isEmpty()) {
+			result++;
+			int[] temp_position = queue.poll();
+			int temp_r = temp_position[0];
+			int temp_c = temp_position[1];
+
+			if(temp_r-1>-1 ) {
+				if(map[temp_r-1][temp_c] == val) {
+					int[] temp = {temp_r-1, temp_c};
+					map[temp[0]][temp[1]] = 0;
+					queue.add(temp);
+				}
+			}
+			if(temp_r+1< max_r) {
+				if(map[temp_r+1][temp_c] == val) {
+					int[] temp = {temp_r+1, temp_c};
+					map[temp[0]][temp[1]] = 0;
+					queue.add(temp);
+				}
+			}
+			if(temp_c-1>-1 ) {
+				if(map[temp_r][temp_c-1] == val) {
+					int[] temp = {temp_r, temp_c-1};
+					map[temp[0]][temp[1]] = 0;
+					queue.add(temp);
+				}
+			}
+			if(temp_c+1<max_c ) {
+				if(map[temp_r][temp_c+1] == val) {
+					int[] temp = {temp_r, temp_c+1};
+					map[temp[0]][temp[1]] = 0;
+					queue.add(temp);
+				}
+			}
+		}
+		return result;
+	}
+}

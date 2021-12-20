@@ -1,0 +1,61 @@
+//[1차] 셔틀버스
+import java.util.Arrays;
+import java.util.HashMap;
+
+class Solution {
+    public String solution(int n, int t, int m, String[] timetable) {
+		HashMap<Integer, Integer> hash = new HashMap<Integer, Integer>();
+		int[] shuttles_time_val = new int[n];
+		shuttles_time_val[0] = 9*60;
+		hash.put(shuttles_time_val[0], 0);
+		if(n>1) {
+			for(int i=1; i<n; i++) {
+				shuttles_time_val[i] = shuttles_time_val[i-1]+t;
+				hash.put(shuttles_time_val[i], 0);
+			}
+		}
+		int[] people_time_val = new int[timetable.length];
+		for(int i=0; i<timetable.length; i++) {
+			String[] time = timetable[i].split(":");
+			people_time_val[i] = (Integer.parseInt(time[0])*60)+Integer.parseInt(time[1]);
+		}
+		Arrays.sort(people_time_val);
+		int last_person_idx = 0;
+		for(int i=0; i<timetable.length; i++) {
+			int person_time_val = people_time_val[i];
+			for(int k=0; k<n; k++) {
+				int key = shuttles_time_val[k];
+				if(hash.get(key)==m)continue;
+				if(person_time_val<=key) {
+					int key_val = hash.get(key);
+					hash.put(key, key_val+1);
+					last_person_idx = i;
+					break;
+				}
+			}
+		}
+
+		int result_time_val = 0;
+		int last_key = shuttles_time_val[n-1];
+		if(hash.get(last_key)<m) {
+			result_time_val = last_key;
+		}else {
+			result_time_val = people_time_val[last_person_idx]-1;
+
+		}
+		String result = "";
+		int result_hour = result_time_val/60;
+		if(result_hour<10) {
+			result+="0"+result_hour;
+		}else {
+			result+=result_hour;
+		}
+		int result_min = result_time_val%60;
+		if(result_min<10) {
+			result+=":0"+result_min;
+		}else {
+			result+=":"+result_min;
+		}
+		return result;
+	}
+}
