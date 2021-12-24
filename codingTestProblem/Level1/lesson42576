@@ -1,0 +1,36 @@
+//완주하지 못한 선수
+import java.util.*;
+
+class Solution {
+    public String solution(String[] participant, String[] completion) {
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		for(String name : participant) {
+			if(map.containsKey(name)) {
+				map.put(name, map.get(name)+1);
+			}else {
+				map.put(name, 1);
+			}
+		}
+		
+		for(String name : completion) {
+			if(map.get(name)==null) {
+				return name;
+			}
+			
+			if(map.get(name)-1==0) {
+				map.remove(name);
+			}else {
+				map.put(name, map.get(name)-1);
+			}
+		}
+		
+		String answer = "";
+		
+		Set<String> keySet = map.keySet();
+		for (String key : keySet) {
+			answer = key;
+		}
+
+        return answer;
+    }
+}
