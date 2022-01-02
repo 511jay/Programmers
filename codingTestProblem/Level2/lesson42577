@@ -1,0 +1,39 @@
+//전화번호부 목록
+import java.util.*;
+class Solution {
+    public boolean solution(String[] phone_book) {
+		Tree tree = new Tree();
+		Tree newTree = new Tree();
+		Arrays.sort(phone_book);
+		for(String phone_number : phone_book) {
+			newTree = tree;
+			for(int idx = 0; idx < phone_number.length(); idx++) {
+				char number = phone_number.charAt(idx);
+				Tree newTree2 = new Tree();
+				if(!newTree.map.containsKey(number)) {
+					newTree.map.put(number, newTree2);
+					if(idx == phone_number.length()-1) {
+						newTree2.isEnd = true;
+					}
+					newTree = newTree2;
+				}else {
+					newTree = newTree.map.get(number);
+					if(newTree.isEnd) return false;
+				}
+				
+			}
+		}
+        return true;
+    }
+	
+	static class Tree{
+		boolean isEnd;
+		HashMap<Character, Tree> map;
+		
+		public Tree() {
+			// TODO Auto-generated constructor stub
+			isEnd = false;
+			map = new HashMap<Character, Tree>();
+		}
+	}
+}
