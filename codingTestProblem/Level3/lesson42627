@@ -1,0 +1,120 @@
+//디스크 컨트롤러
+import java.util.*;
+
+class Solution {
+    public int solution(int[][] jobs) {
+		JobSchecule jobSchecule = new JobSchecule();
+		jobSchecule.setEveryInfo(jobs);
+		return jobSchecule.start(jobs.length);
+    }
+	
+	static class JobSchecule {
+		Queue<Integer> timeQueue;
+		HashMap<Integer, ArrayList<Integer>> jobTimeMap;
+		HashMap<Integer, int[]> jobIdxMap;
+		
+		public JobSchecule() {
+			// TODO Auto-generated constructor stub
+			this.timeQueue = new LinkedList<Integer>();
+			this.jobTimeMap = new HashMap<Integer, ArrayList<Integer>>();
+			this.jobIdxMap = new HashMap<Integer, int[]>();
+		}
+		
+		public void setEveryInfo(int[][] jobs) {
+			ArrayList<Integer> timeList = new ArrayList<Integer>();
+			for(int idx = 0; idx < jobs.length; idx++) {
+				int[] job = jobs[idx];
+				this.jobIdxMap.put(idx, jobs[idx]);
+				ArrayList<Integer>idxList = new ArrayList<Integer>();
+				if(!this.jobTimeMap.containsKey(job[0])) {
+					timeList.add(job[0]);
+				}else {
+					idxList = this.jobTimeMap.get(job[0]);
+				}
+				idxList.add(idx);
+				this.jobTimeMap.put(job[0], idxList);
+			}
+			Collections.sort(timeList);
+			for(int time : timeList) {
+				this.timeQueue.add(time);
+			}
+		}
+		
+		public void addJobToQueue(Queue<Integer> jobQueue, ArrayList<Integer> jobIdxList) {
+			ArrayList<Integer> jobSizeList = new ArrayList<Integer>();
+			ArrayList<Integer> jobIdxList2 = new ArrayList<Integer>();
+			HashMap<Integer, ArrayList<Integer>> sizeIdxMap = new HashMap<Integer, ArrayList<Integer>>();
+			
+			jobIdxList2.addAll(jobQueue);
+			jobIdxList2.addAll(jobIdxList);
+			jobQueue.clear();
+            
+			for(int idx : jobIdxList2) {
+				int[] job = this.jobIdxMap.get(idx);
+				int jobSize = job[1];
+				ArrayList<Integer> newJobIdxList = new ArrayList<Integer>();
+				if(sizeIdxMap.containsKey(jobSize)) {
+					newJobIdxList = sizeIdxMap.get(jobSize);
+				}else {
+					jobSizeList.add(jobSize);
+				}
+				newJobIdxList.add(idx);
+				sizeIdxMap.put(jobSize, newJobIdxList);
+			}
+			
+			Collections.sort(jobSizeList);
+			
+			for(int size : jobSizeList) {
+				jobQueue.addAll(sizeIdxMap.get(size));
+			}
+		}
+		
+		public int start(int processNum) {
+			int time = this.timeQueue.peek();
+			int workingJobIdx = -1;
+			boolean isWorking = false;
+			int sum = 0;
+			
+			Queue<Integer> jobIdxQueue = new LinkedList<Integer>();
+			ArrayList<Integer> jobIdxList = new ArrayList<Integer>();
+			
+			while(!this.jobIdxMap.isEmpty()) {
+				if(this.timeQueue.size()>0) {
+					if(time == this.timeQueue.peek()) {
+						jobIdxList = this.jobTimeMap.get(time);
+						this.addJobToQueue(jobIdxQueue, jobIdxList);
+						timeQueue.poll();
+					}
+				}
+				
+				if(isWorking) {
+					int[] job = this.jobIdxMap.get(workingJobIdx);
+					if(job[1] == 0) {
+						isWorking = false;
+						sum+=time-job[0];
+						this.jobIdxMap.remove(workingJobIdx);
+						continue;
+					}else {
+						job[1]--;
+						this.jobIdxMap.put(workingJobIdx, job);
+					}
+				}else {
+					if(!jobIdxQueue.isEmpty()) {
+						workingJobIdx = jobIdxQueue.poll();
+						int[] job = this.jobIdxMap.get(workingJobIdx);
+						if(job[1] == 0) {
+							this.jobIdxMap.remove(workingJobIdx);
+							continue;
+						}
+						isWorking = true;
+						job[1]--;
+						this.jobIdxMap.put(workingJobIdx, job);
+					}
+				}
+				time++;
+			}
+			return sum/processNum;
+		}
+	}
+}}
+}
