@@ -1,0 +1,80 @@
+//이중우선순위큐
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] operations) {
+	   CustomQueue customQueue = new CustomQueue();
+	   for(String command : operations) {
+		   customQueue.getCommand(command);
+	   }
+	   
+       int[] answer = customQueue.getAnswer();
+       return answer;
+   }
+   
+   static class CustomQueue{
+	   boolean preSort;
+	   ArrayList<Integer> intList;
+	   
+	   public CustomQueue() {
+		// TODO Auto-generated constructor stub
+		   this.intList = new ArrayList<Integer>();
+		   this.preSort = false;
+	   }
+	   
+	   public void getCommand(String cmd) {
+		   String[] cmdInfo = cmd.split(" ");
+		   int flag = Integer.parseInt(cmdInfo[1]);
+		   
+		   if(cmdInfo[0].equals("I")) {
+			   addCustom(flag);
+		   }else if(cmdInfo[0].equals("D") && this.intList.size()>0){
+			   switch (flag) {
+				   case 1:
+					   delMax();
+					   break;
+				   case -1:
+					   delMin();
+					   break;
+			   }
+		   }
+	   }
+	   
+	   public void addCustom(int num) {
+		   this.preSort = false;
+		   this.intList.add(num);
+	   }
+	   
+	   public void delMax(){
+		   if(!this.preSort)
+			   Collections.sort(this.intList);
+		   this.preSort = true;
+		   this.intList.remove(this.intList.size()-1);
+	   }
+	   
+	   public void delMin(){
+		   if(!this.preSort)
+			   Collections.sort(this.intList);
+		   this.preSort = true;
+		   this.intList.remove(0);
+	   }
+	   
+	   public int[] getAnswer() {
+		   int[] answer = {0, 0};
+		   int size = this.intList.size();
+		   if(size == 0) {
+			   return answer;
+		   }else if(size == 1) {
+			   answer[0] = intList.get(0);
+			   answer[1] = intList.get(0);
+			   return answer;
+		   }else {
+			   if(!this.preSort)
+				   Collections.sort(this.intList);
+			   answer[0] = intList.get(size-1);
+			   answer[1] = intList.get(0);
+			   return answer;
+		   }
+	   }
+   }
+}
