@@ -1,0 +1,52 @@
+//프린터
+import java.util.*;
+
+class Solution {
+    public int solution(int[] priorities, int location) {
+        PrintQueue printQueue = new PrintQueue(priorities, location);
+        while(printQueue.getQueueSize()>0){
+            if(printQueue.pollAndCompare())
+                break;
+        }
+        int answer = printQueue.getCount();
+        return answer;
+    }
+    
+    static class PrintQueue{
+        HashMap<Integer, Integer> map;
+        Queue<Integer> queue;
+        int target;
+        int count;
+        public PrintQueue(int[] priorities, int location){
+            this.map = new HashMap<Integer, Integer>();
+            this.queue = new LinkedList<Integer>();
+            this.target = location+1;
+            this.count = 0;
+            
+            for(int idx=0; idx<priorities.length; idx++){
+                this.queue.add(idx+1);
+                this.map.put(idx+1, priorities[idx]);
+            }
+        }
+        public int getQueueSize(){
+            return this.queue.size();    
+        }
+        
+        public boolean pollAndCompare(){
+            int head = this.queue.poll();
+            for(int item : this.queue){
+                if(this.map.get(head) < this.map.get(item)){
+                    this.queue.offer(head);
+                    return false; 
+                }
+            }
+            map.remove(head);
+            this.count++;
+            return this.target == head;
+        }
+        
+        public int getCount(){
+            return this.count;
+        }
+    }
+}
